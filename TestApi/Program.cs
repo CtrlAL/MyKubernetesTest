@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using TaskService.AsyncDataService;
 using TaskService.Data;
 using TaskService.Data.Interfaces;
-using TaskService.DomainEvents;
 using TaskService.Interceptors;
 using TaskService.SyncDataService;
 
@@ -16,6 +15,10 @@ builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddHttpClient<INotificationDataClient, NotificationDataClient>();
 builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
 builder.Services.AddScoped<DomainEventInterceptor>();
+builder.Services.AddMediatR(cfg => {
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
+
 builder.Services.AddGrpc();
 
 if (builder.Environment.IsDevelopment())

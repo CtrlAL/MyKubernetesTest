@@ -36,13 +36,13 @@ namespace TaskService.Controllers
         }
 
         [HttpPost(Name = "SaveTask")]
-        public async Task<ActionResult> Post([FromBody] CreateTaskModel model)
+        public async Task<ActionResult<ReadTaskDto>> Post([FromBody] CreateTaskModel model)
         {
             var entity = _mapper.Map<Entities.Task>(model);
             _taskRepository.Create(entity);
             await _taskRepository.SaveChangesAsync();
 
-            return Ok();
+            return Ok(_mapper.Map<ReadTaskDto>(entity));
         }
     }
 }

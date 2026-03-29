@@ -21,10 +21,7 @@ namespace TaskService.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Entities.Entity>(e =>
-            {
-                e.Ignore(e => e.DomainEvents);
-            });
+            builder.Ignore<List<IDomainEvent>>();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

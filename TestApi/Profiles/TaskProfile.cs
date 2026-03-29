@@ -12,6 +12,7 @@ namespace TaskService.Profiles
             //Source -> Target
             CreateMap<CreateTaskModel, Entities.Task>();
             CreateMap<Entities.Task, SendNotificatioDto>();
+            CreateMap<Entities.Task, ReadTaskDto>();
 
             CreateMap<Entities.Task, GrpsTaskModel>()
                 .ForMember(dest => dest.TaskId, opt => opt.MapFrom(src => src.Id))
