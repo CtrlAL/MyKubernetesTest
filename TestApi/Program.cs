@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Quartz;
 using TaskService.AsyncDataService;
+using TaskService.BackgroundJob;
 using TaskService.Data;
 using TaskService.Data.Interfaces;
 using TaskService.Interceptors;
@@ -19,16 +21,34 @@ builder.Services.AddMediatR(cfg => {
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
 
+builder.Services.AddQuartz(cfg =>
+{
+    var jobKey = new JobKey(nameof(ProcessOutboxMessageJob));
+
+    cfg
+        .AddJob<ProcessOutboxMessageJob>(opt => opt.WithIdentity(jobKey))
+            .AddTrigger(
+                trigger => 
+                    trigger.ForJob(jobKey)
+                        .WithSimpleSchedule(
+                            schedule => 
+                                schedule.WithIntervalInSeconds(10)
+                                .RepeatForever()));
+});
+
+builder.Services.AddQuartzHostedService();
 builder.Services.AddGrpc();
 
-if (builder.Environment.IsDevelopment())
-{
-    builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));
-}
-else
-{
-    builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultDBConnectionString")));
-}
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultDBConnectionString")));
+
+//if (builder.Environment.IsDevelopment())
+//{
+//    builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));
+//}
+//else
+//{
+//    builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultDBConnectionString")));
+//}
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

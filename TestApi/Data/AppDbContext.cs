@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskService.DomainEvents.Base;
 using TaskService.Interceptors;
+using TaskService.Outbox;
 
 namespace TaskService.Data
 {
@@ -18,6 +19,7 @@ namespace TaskService.Data
         }
 
         public DbSet<Entities.Task> Tasks { get; set; }
+        public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

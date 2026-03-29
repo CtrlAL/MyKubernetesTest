@@ -1,6 +1,11 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Runtime.Serialization.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
+using TaskService.Outbox;
 
 namespace TaskService.Interceptors
 {
@@ -45,7 +50,26 @@ namespace TaskService.Interceptors
                 item.ClearEvents();
             }
 
+            var options = new JsonSerializerOptions
+            {
+                TypeInfoResolver = new DefaultJsonTypeInfoResolver()
+            };
+
+            var outboxMessages = domainEvents.Select(e => new OutboxMessage
+            {
+                Id = Guid.NewGuid(),
+                OccuredOnUtc = DateTime.UtcNow,
+                Type = e.GetType().Name,
+                Content = JsonSerializer.Serialize((object)e, options),
+            });
+
             domainEvents.ForEach(e => _mediator.Publish(e));
+
+            await context.Set<OutboxMessage>().AddRangeAsync(outboxMessages);
+        }
+
+        private async Task ConvertToOutboxAsync() 
+        { 
         }
     }
 }
