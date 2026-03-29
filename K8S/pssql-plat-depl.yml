@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pssql-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:          # исправлено: было mathLabels
+      app: pssql
+  template:
+    metadata:
+      labels:
+        app: pssql
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-pass
+                  key: POSTGRES_PASSWORD   # ключ в секрете
+            # Необязательные, но полезные:
+            # - name: POSTGRES_USER
+            #   value: "myuser"
+            # - name: POSTGRES_DB
+            #   value: "mydb"
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data   # правильный путь
+              name: pssqldb
+      volumes:
+        - name: pssqldb
+          persistentVolumeClaim:
+            claimName: psql-claim
+---
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name:  pssql-depl-clusterip-srv
+spec: 
+  type: ClusterIP
+  selector: 
+    app: pssql
+  ports:
+    - name: pssql
+      protocol: TCP
+      port: 5432
+      targetPort: 5432
+
+---
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pssql-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: pssql
+  ports:
+    - protocol: TCP
+      port: 5433
+      targetPort: 5432

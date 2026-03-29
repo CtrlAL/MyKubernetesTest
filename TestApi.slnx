@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="SecondProject/NotificationService.csproj" Id="6202fa11-e12f-4758-b38d-ef0578b44c45" />
+  <Project Path="TestApi/TaskService.csproj" />
+</Solution>

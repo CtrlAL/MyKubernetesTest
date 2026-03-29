@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name:  task-service-depl
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: task-service
+  template: 
+    metadata: 
+      labels:
+        app: task-service
+    spec: 
+      containers: 
+        - name: task-service
+          image: ctrlal/task-service:latest
+---
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name:  task-service-clusterip-srv
+spec: 
+  type: ClusterIP
+  selector: 
+    app: task-service
+  ports:
+    - name: task-service
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+    - name: task-service-grpc
+      protocol: TCP
+      port: 666
+      targetPort: 666

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option csharp_namespace = "TaskService";
+
+service GrpcTasks
+{
+	rpc GetAllTasks (GetAllRequest) returns (TasksResponse);
+}
+
+message GetAllRequest { }
+
+message GrpsTaskModel
+{
+	int32 taskId = 1;
+	string name = 2;
+}
+
+message TasksResponse
+{
+	repeated GrpsTaskModel tasks = 1;
+}
