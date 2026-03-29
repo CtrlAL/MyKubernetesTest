@@ -1,10 +1,9 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using System.Runtime.Serialization.Json;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
+using TaskService.DomainEvents.Base;
 using TaskService.Outbox;
 
 namespace TaskService.Interceptors
@@ -18,16 +17,16 @@ namespace TaskService.Interceptors
             _mediator = mediatr;
         }
 
-        public override int SavedChanges(SaveChangesCompletedEventData eventData, int result)
+        public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
         {
             PublishDomainEvent(eventData.Context).GetAwaiter().GetResult();
-            return base.SavedChanges(eventData, result);
+            return base.SavingChanges(eventData, result);
         }
 
-        public override async ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result, CancellationToken cancellationToken = default)
+        public async override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
         {
             await PublishDomainEvent(eventData.Context!);
-            return await base.SavedChangesAsync(eventData, result, cancellationToken);
+            return await base.SavingChangesAsync(eventData, result, cancellationToken);
         }
 
         private async Task PublishDomainEvent(DbContext? context)
@@ -50,6 +49,13 @@ namespace TaskService.Interceptors
                 item.ClearEvents();
             }
 
+            var outboxMessages = ConvertToOutbox(domainEvents);
+
+            context.Set<OutboxMessage>().AddRange(outboxMessages);
+        }
+
+        private IEnumerable<OutboxMessage> ConvertToOutbox(IEnumerable<IDomainEvent> domainEvents) 
+        {
             var options = new JsonSerializerOptions
             {
                 TypeInfoResolver = new DefaultJsonTypeInfoResolver()
@@ -63,11 +69,7 @@ namespace TaskService.Interceptors
                 Content = JsonSerializer.Serialize((object)e, options),
             });
 
-            await context.Set<OutboxMessage>().AddRangeAsync(outboxMessages);
-        }
-
-        private async Task ConvertToOutboxAsync() 
-        { 
+            return outboxMessages;
         }
     }
 }

@@ -15,17 +15,26 @@ namespace TaskService.Data
 
         private static void SeedData(AppDbContext dbContext, bool isProd)
         {
-            if (isProd)
-            {
-                try
-                {
-                    dbContext.Database.Migrate();
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine($"Cannot apply migrations: {ex.Message}");
-                }
+            //if (isProd)
+            //{
+            //    try
+            //    {
+            //        dbContext.Database.Migrate();
+            //    }
+            //    catch(Exception ex)
+            //    {
+            //        Console.WriteLine($"Cannot apply migrations: {ex.Message}");
+            //    }
                 
+            //}
+
+            try
+            {
+                dbContext.Database.Migrate();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Cannot apply migrations: {ex.Message}");
             }
 
 
