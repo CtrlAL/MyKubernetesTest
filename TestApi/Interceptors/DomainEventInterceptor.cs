@@ -65,7 +65,7 @@ namespace TaskService.Interceptors
             {
                 Id = Guid.NewGuid(),
                 OccuredOnUtc = DateTime.UtcNow,
-                Type = e.GetType().Name,
+                Type = e.GetType().AssemblyQualifiedName!,
                 Content = JsonSerializer.Serialize((object)e, options),
             });
 

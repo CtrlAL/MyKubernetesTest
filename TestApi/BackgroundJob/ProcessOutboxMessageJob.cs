@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Quartz;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using TaskService.Data;
 using TaskService.DomainEvents.Base;
 using TaskService.Outbox;
@@ -23,13 +24,19 @@ namespace TaskService.BackgroundJob
         public async Task Execute(IJobExecutionContext context)
         {
             var messages = await _appDbContext.Set<OutboxMessage>()
-                .Where(m => m.ProcededOnUtc != null)
+                .Where(m => m.ProcededOnUtc == null)
                 .Take(20)
                 .ToListAsync();
 
             foreach (var outboxMessage in messages)
             {
-                IDomainEvent? domainEvent = JsonSerializer.Deserialize<IDomainEvent>(outboxMessage.Content);
+                var options = new JsonSerializerOptions
+                {
+                    TypeInfoResolver = new DefaultJsonTypeInfoResolver()
+                };
+
+                var type = Type.GetType(outboxMessage.Type);
+                IDomainEvent? domainEvent = JsonSerializer.Deserialize(outboxMessage.Content, type!) as IDomainEvent;
 
                 if (domainEvent is null)
                 {
