@@ -42,21 +42,6 @@ namespace TaskService.Controllers
             _taskRepository.Create(entity);
             await _taskRepository.SaveChangesAsync();
 
-            try
-            {
-                entity = await _taskRepository.GetById(entity.Id);
-
-                var syncEvent = _mapper.Map<SendNotificatioDto>(entity);
-                var asyncEvent = _mapper.Map<TaskCreatedDto>(entity);
-
-                await _notificationDataClient.SendToReportService(syncEvent);
-                await _messageBusClient.PublishNewTask(asyncEvent);
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine($"Could not send synchronously: {ex.Message}");
-            }
-
             return Ok();
         }
     }

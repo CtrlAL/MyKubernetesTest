@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskService.Data.Interfaces;
+using TaskService.DomainEvents;
 
 namespace TaskService.Data
 {
@@ -16,6 +17,7 @@ namespace TaskService.Data
         {
             ArgumentNullException.ThrowIfNull(entitiy);
             _appDbContext.Tasks.Add(entitiy);
+            entitiy.RaiseEvent(new TaskCreatedDomainEvent(entitiy));
         }
 
         public Task<List<Entities.Task>> GetAll()
