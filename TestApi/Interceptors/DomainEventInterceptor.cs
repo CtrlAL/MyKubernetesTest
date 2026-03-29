@@ -63,8 +63,6 @@ namespace TaskService.Interceptors
                 Content = JsonSerializer.Serialize((object)e, options),
             });
 
-            domainEvents.ForEach(e => _mediator.Publish(e));
-
             await context.Set<OutboxMessage>().AddRangeAsync(outboxMessages);
         }
 
