@@ -5,6 +5,7 @@ using TaskService.Dto;
 using TaskService.Data.Interfaces;
 using MediatR;
 using TaskService.Application.Commands.CreateTask;
+using TaskService.Domain.Shared;
 
 namespace TaskService.Controllers
 {
@@ -32,7 +33,7 @@ namespace TaskService.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ReadTaskDto>> Post([FromBody] CreateTaskModel model)
+        public async Task<ActionResult<Result<ReadTaskDto>>> Post([FromBody] CreateTaskModel model)
         {
             var command = _mapper.Map<CreateTaskCommand>(model);
             var result = _mediator.Send(command);
