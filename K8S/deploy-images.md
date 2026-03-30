@@ -53,6 +53,78 @@ kubectl rollout status deployment/notification-service-depl --timeout=120s
 - В манифестах контейнеры названы: `task-service` и `notification-service`.
 - Namesapce в ваших YAML не задан, значит используется `default` (если у вас другой namespace — добавьте `-n <namespace>`).
 
+## 4) По какому принципу выделены слои (Clean Architecture)
+
+В Clean Architecture слои разделяют ответственность и зависимости. Общая идея такая: код “внутри” (особенно `Domain`) должен быть максимально независимым от фреймворков/инфраструктуры, а внешние адаптеры (`Presentation` и `Infrastructure`) реализуют детали.
+
+Зависимости в идеале направлены так:
+`Presentation` -> `Application` -> `Domain`, а `Infrastructure` реализует “контракты” из `Application`.
+
+### Domain
+
+`Domain` — это ядро предметной области: сущности, доменные правила, доменные события.
+
+Здесь обычно нет EF Core, RabbitMQ, HTTP/GRPC и т.п. В вашем `TaskService` это:
+- `TaskService/Domain/Entities/*` (например, `Task`, базовая сущность `Entity`)
+- `TaskService/Domain/DomainEvents/*` (например, `TaskCreatedDomainEvent`)
+
+В `NotificationService` логика обработки событий сейчас находится не в “ядре” домена, а ближе к обработчику use-case (поэтому там в основном `Application`/`Infrastructure`).
+
+### Application
+
+`Application` — слой сценариев (use-cases) и прикладных контрактов.
+
+Там обычно:
+- интерфейсы портов (что нужно для выполнения сценария)
+- use-case логика
+- DTO для обмена внутри сценариев
+- обработчики доменных событий (как реализация use-case)
+
+В вашем `TaskService` это:
+- `TaskService/Application/Interfaces/ITaskRepository.cs` — порт доступа к данным
+- `TaskService/Application/DomainEventHandlers/*` — обработчик `TaskCreatedDomainEventHandler`
+- `TaskService/Application/Dto/*` — прикладные DTO, которые используются в сценариях и маппинге
+
+### Infrastructure
+
+`Infrastructure` — реализация деталей и интеграций:
+- БД (EF Core `DbContext`, миграции, репозитории)
+- месседж-брокеры (RabbitMQ и т.п.)
+- внешние протоколы (gRPC клиенты/серверы, HTTP клиенты)
+- background jobs и outbox
+- interceptors, которые “подмешивают” доменные события в save-changes
+
+В `TaskService` это, например:
+- `TaskService/Infrastructure/Data/*` (`AppDbContext`, `TaskRepository`, `PrepDb`)
+- `TaskService/Infrastructure/Outbox/*` (`OutboxMessage`)
+- `TaskService/Infrastructure/BackgroundJob/*` (`ProcessOutboxMessageJob`)
+- `TaskService/Infrastructure/AsyncDataService/*` (`MessageBusClient`, RabbitMQ)
+- `TaskService/Infrastructure/SyncDataService/*` (`NotificationDataClient`, gRPC server)
+- `TaskService/Infrastructure/Interceptors/*` (`DomainEventInterceptor`)
+
+### Presentation
+
+`Presentation` — “границы приложения”: то, что общается с внешним миром (HTTP/REST, gRPC endpoints, контроллеры) и слой преобразований данных для UI/transport.
+
+В вашем `TaskService` это:
+- `TaskService/Presentation/Controllers/*` — `TasksController`
+- `TaskService/Presentation/Models/*` — модели запроса (например, `CreateTaskModel`)
+- `TaskService/Presentation/Profiles/*` — AutoMapper profile, который отвечает за преобразования “на границе” (model/entity/dto)
+- `TaskService/Presentation/Grpc/*` — `GrpcTasksService` (если это endpoint для внешних клиентов)
+
+В `NotificationService` логично аналогично:
+- `Presentation/Controllers/*` — `NotificationsController`
+- `Presentation/Profilers/*` — `NotificationProfile` (маппинг ответа для транспортного слоя)
+- `Application/EventProcessing/*` — обработка событий как сценарий
+- `Infrastructure/*` — RabbitMQ subscriber, EF `AppDbContext`, grpc client и т.п.
+
+### Почему мы сделали это “перестановкой”, без рефакторинга
+
+Мы не меняли бизнес-логику и сервисы. Мы просто привели физическую структуру папок к смысловой модели Clean Architecture, чтобы:
+- было видно, где ядро (`Domain`), а где интеграции (`Infrastructure`)
+- проще ориентироваться при добавлении новых сценариев/use-case
+- проще понимать, какие зависимости должны быть “внутрь”, а какие “наружу”
+
 ## 4) Расширения для Cursor (C#, Docker, Kubernetes)
 
 Установить в Cursor такие расширения (как и в VS Code):
