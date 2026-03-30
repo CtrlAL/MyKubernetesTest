@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NotificationService.Dtos;
+using NotificationService.Infrastructure.DataServices.SyncDataService;
 using NotificationService.Models;
-using NotificationService.SyncDataService;
 
 namespace SecondProject.Controllers
 {

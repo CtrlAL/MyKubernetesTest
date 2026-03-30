@@ -1,6 +1,6 @@
 ﻿using NotificationService.Dtos;
 
-namespace NotificationService.SyncDataService
+namespace NotificationService.Infrastructure.DataServices.SyncDataService
 {
     public interface ITasksDataClient
     {

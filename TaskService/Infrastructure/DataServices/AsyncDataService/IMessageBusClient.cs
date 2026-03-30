@@ -1,6 +1,6 @@
 ﻿using TaskService.Dto;
 
-namespace TaskService.AsyncDataService
+namespace TaskService.Infrastructure.DataServices.AsyncDataService
 {
     public interface IMessageBusClient
     {

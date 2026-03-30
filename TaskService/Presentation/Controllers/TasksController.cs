@@ -1,10 +1,10 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TaskService.Models;
-using TaskService.SyncDataService;
 using TaskService.Dto;
 using TaskService.Data.Interfaces;
-using TaskService.AsyncDataService;
+using TaskService.Infrastructure.DataServices.SyncDataService;
+using TaskService.Infrastructure.DataServices.AsyncDataService;
 
 namespace TaskService.Controllers
 {

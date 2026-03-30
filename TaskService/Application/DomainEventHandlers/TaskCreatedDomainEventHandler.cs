@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
-using TaskService.AsyncDataService;
 using TaskService.DomainEvents;
 using TaskService.Dto;
-using TaskService.SyncDataService;
+using TaskService.Infrastructure.DataServices.AsyncDataService;
+using TaskService.Infrastructure.DataServices.SyncDataService;
 
 namespace TaskService.DomainEventHandlers
 {

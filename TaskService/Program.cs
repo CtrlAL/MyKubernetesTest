@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Quartz;
-using TaskService.AsyncDataService;
 using TaskService.BackgroundJob;
 using TaskService.Data;
 using TaskService.Data.Interfaces;
+using TaskService.Infrastructure.DataServices.AsyncDataService;
+using TaskService.Infrastructure.DataServices.SyncDataService;
 using TaskService.Interceptors;
 using TaskService.SyncDataService;
 

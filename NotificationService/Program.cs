@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using NotificationService.AsyncDataServices;
 using NotificationService.EventProcessing;
-using NotificationService.SyncDataService;
+using NotificationService.Infrastructure.DataServices.AsyncDataServices;
+using NotificationService.Infrastructure.DataServices.SyncDataService;
 using SecondProject.Data;
 
 var builder = WebApplication.CreateBuilder(args);

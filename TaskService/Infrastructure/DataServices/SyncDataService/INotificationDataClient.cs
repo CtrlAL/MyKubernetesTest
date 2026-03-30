@@ -1,6 +1,6 @@
 ﻿using TaskService.Dto;
 
-namespace TaskService.SyncDataService
+namespace TaskService.Infrastructure.DataServices.SyncDataService
 {
     public interface INotificationDataClient
     {

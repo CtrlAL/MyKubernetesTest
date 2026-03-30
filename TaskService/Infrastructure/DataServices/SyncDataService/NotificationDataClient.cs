@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using TaskService.Dto;
 
-namespace TaskService.SyncDataService
+namespace TaskService.Infrastructure.DataServices.SyncDataService
 {
     public class NotificationDataClient : INotificationDataClient
     {

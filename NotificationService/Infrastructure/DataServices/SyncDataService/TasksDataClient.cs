@@ -3,7 +3,7 @@ using Grpc.Net.Client;
 using NotificationService.Dtos;
 using TaskService;
 
-namespace NotificationService.SyncDataService
+namespace NotificationService.Infrastructure.DataServices.SyncDataService
 {
     public class TasksDataClient : ITasksDataClient
     {
