@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Quartz;
+using System.Reflection;
 using TaskService.BackgroundJob;
 using TaskService.Data;
 using TaskService.Data.Interfaces;
 using TaskService.Infrastructure.DataServices.AsyncDataService;
 using TaskService.Infrastructure.DataServices.SyncDataService;
 using TaskService.Interceptors;
+using TaskService.Presentation.Extensions;
 using TaskService.SyncDataService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +41,7 @@ builder.Services.AddQuartz(cfg =>
 
 builder.Services.AddQuartzHostedService();
 builder.Services.AddGrpc();
+builder.Services.AddEndpoints(Assembly.GetAssembly(typeof(Program))!);
 
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultDBConnectionString")));
 
@@ -67,6 +70,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapEndpoints();
 app.MapGrpcService<GrpcTasksService>();
 app.MapGet("/protos/tasks.proto", async context => 
     await context.Response.WriteAsync(
