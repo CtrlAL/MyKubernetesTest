@@ -36,7 +36,7 @@ namespace TaskService.Controllers
         public async Task<ActionResult<Result<ReadTaskDto>>> Post([FromBody] CreateTaskModel model)
         {
             var command = _mapper.Map<CreateTaskCommand>(model);
-            var result = _mediator.Send(command);
+            var result = await _mediator.Send(command);
 
             return Ok(result);
         }
