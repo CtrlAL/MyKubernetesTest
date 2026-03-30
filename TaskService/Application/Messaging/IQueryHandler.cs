@@ -1,6 +1,10 @@
-﻿namespace TaskService.Application.Messaging
+﻿using MediatR;
+using TaskService.Domain.Shared;
+
+namespace TaskService.Application.Messaging
 {
-    public interface IQueryHandler
+    public interface IQueryHandler<TCommand, TResponse> : IRequestHandler<TCommand, Result<TResponse>>
+        where TCommand : IQuery<TResponse>
     {
     }
 }

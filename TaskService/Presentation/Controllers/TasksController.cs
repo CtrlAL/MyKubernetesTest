@@ -6,6 +6,7 @@ using TaskService.Data.Interfaces;
 using MediatR;
 using TaskService.Application.Commands.CreateTask;
 using TaskService.Domain.Shared;
+using TaskService.Application.Queries.GetAllTask;
 
 namespace TaskService.Controllers
 {
@@ -26,10 +27,12 @@ namespace TaskService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Entities.Task>>> Get()
+        public async Task<ActionResult<Result<List<Entities.Task>>>> Get()
         {
-            var taks = await _taskRepository.GetAll();
-            return Ok(taks);
+            var query = new GetAllQuery();
+            var result = await _mediator.Send(query);
+
+            return Ok(result);
         }
 
         [HttpPost]
