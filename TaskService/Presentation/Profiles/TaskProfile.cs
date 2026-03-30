@@ -12,7 +12,9 @@ namespace TaskService.Profiles
         {
             //Source -> Target
             CreateMap<CreateTaskModel, CreateTaskCommand>();
+            CreateMap<CreateTaskCommand, Entities.Task>();
             CreateMap<CreateTaskModel, Entities.Task>();
+
             CreateMap<Entities.Task, SendNotificatioDto>();
             CreateMap<Entities.Task, ReadTaskDto>();
 
