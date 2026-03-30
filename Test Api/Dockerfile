@@ -12,9 +12,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["TestApi/TaskService.csproj", "TestApi/"]
+COPY ["Test Api/TaskService.csproj", "TestApi/"]
 RUN dotnet restore "./TestApi/TaskService.csproj"
 COPY . .
+RUN if [ -d "/src/Test Api" ]; then rm -rf "/src/TestApi" && mv "/src/Test Api" /src/TestApi; fi
 WORKDIR "/src/TestApi"
 RUN dotnet build "./TaskService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

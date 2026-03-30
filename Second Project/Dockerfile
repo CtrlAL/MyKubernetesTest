@@ -12,9 +12,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["SecondProject/NotificationService.csproj", "SecondProject/"]
+COPY ["Second Project/NotificationService.csproj", "SecondProject/"]
 RUN dotnet restore "./SecondProject/NotificationService.csproj"
 COPY . .
+RUN if [ -d "/src/Second Project" ]; then rm -rf "/src/SecondProject" && mv "/src/Second Project" /src/SecondProject; fi
 WORKDIR "/src/SecondProject"
 RUN dotnet build "./NotificationService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
