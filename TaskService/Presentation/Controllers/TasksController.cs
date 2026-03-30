@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using TaskService.Models;
 using TaskService.Dto;
 using TaskService.Data.Interfaces;
-using TaskService.Infrastructure.DataServices.SyncDataService;
-using TaskService.Infrastructure.DataServices.AsyncDataService;
+using MediatR;
+using TaskService.Application.Commands.CreateTask;
 
 namespace TaskService.Controllers
 {
@@ -14,18 +14,14 @@ namespace TaskService.Controllers
     public class TasksController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly ILogger<TasksController> _logger;
-        private readonly INotificationDataClient _notificationDataClient;
+        private readonly IMediator _mediator;
         private readonly ITaskRepository _taskRepository;
-        private readonly IMessageBusClient _messageBusClient;
 
-        public TasksController(IMapper mapper, ILogger<TasksController> logger, INotificationDataClient notificationDataClient, ITaskRepository taskRepository, IMessageBusClient messageBusClient)
+        public TasksController(IMapper mapper, IMediator mediator, ITaskRepository taskRepository)
         {
             _mapper = mapper;
-            _logger = logger;
-            _notificationDataClient = notificationDataClient;
+            _mediator = mediator;
             _taskRepository = taskRepository;
-            _messageBusClient = messageBusClient;
         }
 
         [HttpGet]
@@ -38,11 +34,10 @@ namespace TaskService.Controllers
         [HttpPost]
         public async Task<ActionResult<ReadTaskDto>> Post([FromBody] CreateTaskModel model)
         {
-            var entity = _mapper.Map<Entities.Task>(model);
-            _taskRepository.Create(entity);
-            await _taskRepository.SaveChangesAsync();
+            var command = _mapper.Map<CreateTaskCommand>(model);
+            var result = _mediator.Send(command);
 
-            return Ok(_mapper.Map<ReadTaskDto>(entity));
+            return Ok(result);
         }
     }
 }

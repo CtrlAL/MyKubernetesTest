@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using TaskService.Application.Commands.CreateTask;
 using TaskService.Dto;
 using TaskService.Models;
 
@@ -10,6 +11,7 @@ namespace TaskService.Profiles
         public TaskProfile()
         {
             //Source -> Target
+            CreateMap<CreateTaskModel, CreateTaskCommand>();
             CreateMap<CreateTaskModel, Entities.Task>();
             CreateMap<Entities.Task, SendNotificatioDto>();
             CreateMap<Entities.Task, ReadTaskDto>();

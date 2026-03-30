@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TaskService.Data.Interfaces;
 using TaskService.Dto;
@@ -7,11 +7,11 @@ using TaskService.Presentation.Base;
 
 namespace TaskService.Presentation.EndPoints
 {
-    public class TasksEnpoint : IEndpoint
+    public class TasksEndpoint : IEndpoint
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            var group = app.MapGroup("/api/task-enpoint");
+            var group = app.MapGroup("/api/task-endpoint");
 
             group.MapGet("/", Get);
             group.MapPost("/", Post);
@@ -19,8 +19,8 @@ namespace TaskService.Presentation.EndPoints
 
         public async Task<IResult> Get([FromServices] ITaskRepository taskRepository)
         {
-            var taks = await taskRepository.GetAll();
-            return Results.Ok(taks);
+            var tasks = await taskRepository.GetAll();
+            return Results.Ok(tasks);
         }
 
         public async Task<IResult> Post([FromBody] CreateTaskModel model, IMapper mapper, ITaskRepository taskRepository)
