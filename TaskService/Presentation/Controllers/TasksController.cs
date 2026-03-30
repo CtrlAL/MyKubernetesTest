@@ -28,14 +28,14 @@ namespace TaskService.Controllers
             _messageBusClient = messageBusClient;
         }
 
-        [HttpGet(Name = "GetTasks")]
+        [HttpGet]
         public async Task<ActionResult<List<Entities.Task>>> Get()
         {
             var taks = await _taskRepository.GetAll();
             return Ok(taks);
         }
 
-        [HttpPost(Name = "SaveTask")]
+        [HttpPost]
         public async Task<ActionResult<ReadTaskDto>> Post([FromBody] CreateTaskModel model)
         {
             var entity = _mapper.Map<Entities.Task>(model);

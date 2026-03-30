@@ -19,8 +19,7 @@ namespace SecondProject.Controllers
             _tasksDataClient = tasksDataClient;
         }
 
-        [HttpPost(Name = "SendNotification")]
-        [Route("get-tasks")]
+        [HttpPost("get-tasks")]
         public ActionResult Post([FromBody] SendNotificationModel model)
         {
             Console.WriteLine("Apply from Test Api");
@@ -28,7 +27,7 @@ namespace SecondProject.Controllers
             return Ok();
         }
 
-        [HttpGet(Name = "GetTasksFromNotificationService")]
+        [HttpGet]
         public async Task<ActionResult<List<ReadTaskDto>>> GetTasks()
         {
             var response = await _tasksDataClient.GetAllTasks();
