@@ -1,0 +1,28 @@
+---
+description: Core architecture conventions for all microservices
+alwaysApply: true
+---
+
+# Project Architecture
+
+This solution follows Clean Architecture with CQRS per microservice.
+
+## Layer structure
+
+```
+ServiceName/
+├── Domain/          # Entities, Shared (Result, Failure), Exceptions
+├── Application/     # Commands, Queries, Messaging, Interfaces, DTOs
+├── Infrastructure/  # Data (DbContext, Repositories), Middleware, Migrations
+└── Presentation/    # Endpoints, Models, Profiles, Extensions
+```
+
+## Key conventions
+
+- Use the `Result<T>` / `Result` wrapper for all command/query responses
+- Use `IEndpoint` + minimal APIs, not controllers, for new endpoints
+- Register endpoints via `AddEndpoints()` / `MapEndpoints()` extensions
+- Use MediatR for all command/query dispatch
+- Use AutoMapper for mapping between Models, Commands, and DTOs
+- PostgreSQL via Npgsql + EF Core for persistence
+- Each service has its own database

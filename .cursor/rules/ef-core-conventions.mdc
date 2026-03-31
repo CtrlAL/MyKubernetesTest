@@ -1,0 +1,14 @@
+---
+description: Entity Framework Core conventions
+globs: "**/Infrastructure/**/*.cs"
+alwaysApply: false
+---
+
+# EF Core Conventions
+
+- Use Fluent API in `OnModelCreating` for relationships, not data annotations
+- Always generate a named migration after schema changes: `dotnet ef migrations add <Name>`
+- Migrations output to `Infrastructure/Migrations/`
+- Connection string key: `DefaultDBConnectionString`
+- Production connection strings point to `pssql-depl-clusterip-srv`
+- Use `PrepDb.PreparingPopulation()` in `Program.cs` to auto-apply migrations in non-dev

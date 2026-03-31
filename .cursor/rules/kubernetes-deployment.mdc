@@ -1,0 +1,16 @@
+---
+description: Kubernetes deployment conventions
+globs: "K8S/**/*.yml"
+alwaysApply: false
+---
+
+# Kubernetes Conventions
+
+- All K8S manifests live in `K8S/` at the repo root
+- Each service gets a Deployment + ClusterIP Service in one file: `<service>-depl.yml`
+- Docker images are pushed to `ctrlal/<service-name>:latest`
+- Services expose port 80 mapped to container targetPort 8080
+- The shared PostgreSQL instance is at `pssql-depl-clusterip-srv:5432`
+- Each service uses a separate database on the shared PostgreSQL
+- Ingress routes are defined in `ingress-srv.yml` under host `acme.com`
+- After adding a new service, always add its route to the ingress

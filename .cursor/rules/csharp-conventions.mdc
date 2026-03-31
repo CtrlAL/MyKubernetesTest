@@ -1,0 +1,15 @@
+---
+description: C# coding conventions for the project
+globs: "**/*.cs"
+alwaysApply: false
+---
+
+# C# Conventions
+
+- Target framework: .NET 8
+- Use file-scoped namespaces only when consistent with existing code (this project uses block-scoped)
+- Use `record` for Commands and Queries
+- Use `sealed` on exception classes and handlers where appropriate
+- Throw domain exceptions (`NotFoundException`, `BadRequestException`) — never return error codes
+- Use `ArgumentNullException.ThrowIfNull()` for guard clauses
+- Avoid comments that just narrate what the code does
