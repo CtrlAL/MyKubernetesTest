@@ -1,0 +1,256 @@
+{
+	"info": {
+		"name": "GraphService",
+		"description": "Graph Service API - Nodes, Edges, and Reachability check",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://localhost:7200",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Nodes",
+			"item": [
+				{
+					"name": "Get All Nodes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/graph/nodes",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "graph", "nodes"]
+						}
+					}
+				},
+				{
+					"name": "Create Node A",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"A\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/graph/nodes",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "graph", "nodes"]
+						}
+					}
+				},
+				{
+					"name": "Create Node B",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"B\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/graph/nodes",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "graph", "nodes"]
+						}
+					}
+				},
+				{
+					"name": "Create Node C",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"C\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/graph/nodes",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "graph", "nodes"]
+						}
+					}
+				},
+				{
+					"name": "Create Node D",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"D\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/graph/nodes",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "graph", "nodes"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Edges",
+			"item": [
+				{
+					"name": "Create Edge A -> B",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sourceNodeId\": 1,\n    \"targetNodeId\": 2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/graph/edges",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "graph", "edges"]
+						}
+					}
+				},
+				{
+					"name": "Create Edge B -> C",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sourceNodeId\": 2,\n    \"targetNodeId\": 3\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/graph/edges",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "graph", "edges"]
+						}
+					}
+				},
+				{
+					"name": "Create Edge C -> D",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sourceNodeId\": 3,\n    \"targetNodeId\": 4\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/graph/edges",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "graph", "edges"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Reachability",
+			"item": [
+				{
+					"name": "Check Reachability A -> D (reachable)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/graph/reachability?sourceNodeId=1&targetNodeId=4",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "graph", "reachability"],
+							"query": [
+								{
+									"key": "sourceNodeId",
+									"value": "1"
+								},
+								{
+									"key": "targetNodeId",
+									"value": "4"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Check Reachability D -> A (not reachable)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/graph/reachability?sourceNodeId=4&targetNodeId=1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "graph", "reachability"],
+							"query": [
+								{
+									"key": "sourceNodeId",
+									"value": "4"
+								},
+								{
+									"key": "targetNodeId",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Check Reachability A -> C (reachable)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/graph/reachability?sourceNodeId=1&targetNodeId=3",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "graph", "reachability"],
+							"query": [
+								{
+									"key": "sourceNodeId",
+									"value": "1"
+								},
+								{
+									"key": "targetNodeId",
+									"value": "3"
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}

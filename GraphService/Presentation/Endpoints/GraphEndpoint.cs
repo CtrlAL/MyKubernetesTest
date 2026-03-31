@@ -2,6 +2,7 @@ using AutoMapper;
 using GraphService.Application.Commands.CreateEdge;
 using GraphService.Application.Commands.CreateNode;
 using GraphService.Application.Queries.CheckReachability;
+using GraphService.Application.Queries.CheckReachabilityRecursiveSql;
 using GraphService.Application.Queries.GetAllNodes;
 using GraphService.Presentation.Base;
 using GraphService.Presentation.Models;
@@ -21,6 +22,7 @@ namespace GraphService.Presentation.Endpoints
             group.MapPost("/nodes", CreateNode);
             group.MapPost("/edges", CreateEdge);
             group.MapGet("/reachability", CheckReachability);
+            group.MapGet("/reachability-sql", CheckReachabilitySql);
         }
 
         private static async Task<IResult> GetAllNodes([FromServices] IMediator mediator)

@@ -11,5 +11,6 @@ namespace GraphService.Application.Interfaces
         void CreateEdge(Edge edge);
         Task<bool> EdgeExists(int sourceNodeId, int targetNodeId);
         Task<Dictionary<int, List<int>>> GetAdjacencyList();
+        Task<(bool IsReachable, List<int>? Path)> CheckReachabilityRecursiveSql(int sourceNodeId, int targetNodeId);
     }
 }
