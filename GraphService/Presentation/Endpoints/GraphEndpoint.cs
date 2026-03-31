@@ -61,5 +61,15 @@ namespace GraphService.Presentation.Endpoints
             var result = await mediator.Send(query);
             return Results.Ok(result);
         }
+
+        private static async Task<IResult> CheckReachabilitySql(
+            [FromQuery] int sourceNodeId,
+            [FromQuery] int targetNodeId,
+            [FromServices] IMediator mediator)
+        {
+            var query = new CheckReachabilityRecursiveSqlQuery(sourceNodeId, targetNodeId);
+            var result = await mediator.Send(query);
+            return Results.Ok(result);
+        }
     }
 }
