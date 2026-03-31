@@ -113,6 +113,12 @@ namespace GraphService.Infrastructure.Data
             return (false, null);
         }
 
+        public void DeleteNode(Node node)
+        {
+            ArgumentNullException.ThrowIfNull(node);
+            _context.Nodes.Remove(node);
+        }
+
         public Task SaveChangesAsync()
         {
             return _context.SaveChangesAsync();

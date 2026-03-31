@@ -1,6 +1,7 @@
 using AutoMapper;
 using GraphService.Application.Commands.CreateEdge;
 using GraphService.Application.Commands.CreateNode;
+using GraphService.Application.Commands.DeleteNode;
 using GraphService.Application.Queries.CheckReachability;
 using GraphService.Application.Queries.CheckReachabilityRecursiveSql;
 using GraphService.Application.Queries.GetAllNodes;
@@ -20,6 +21,7 @@ namespace GraphService.Presentation.Endpoints
 
             group.MapGet("/nodes", GetAllNodes);
             group.MapPost("/nodes", CreateNode);
+            group.MapDelete("/nodes/{id:int}", DeleteNode);
             group.MapPost("/edges", CreateEdge);
             group.MapGet("/reachability", CheckReachability);
             group.MapGet("/reachability-sql", CheckReachabilitySql);
@@ -38,6 +40,15 @@ namespace GraphService.Presentation.Endpoints
             [FromServices] IMediator mediator)
         {
             var command = mapper.Map<CreateNodeCommand>(model);
+            var result = await mediator.Send(command);
+            return Results.Ok(result);
+        }
+
+        private static async Task<IResult> DeleteNode(
+            int id,
+            [FromServices] IMediator mediator)
+        {
+            var command = new DeleteNodeCommand(id);
             var result = await mediator.Send(command);
             return Results.Ok(result);
         }

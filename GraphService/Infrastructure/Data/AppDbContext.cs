@@ -19,12 +19,12 @@ namespace GraphService.Infrastructure.Data
                 e.HasOne(edge => edge.SourceNode)
                     .WithMany(node => node.OutgoingEdges)
                     .HasForeignKey(edge => edge.SourceNodeId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 e.HasOne(edge => edge.TargetNode)
                     .WithMany(node => node.IncomingEdges)
                     .HasForeignKey(edge => edge.TargetNodeId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 e.HasIndex(edge => new { edge.SourceNodeId, edge.TargetNodeId })
                     .IsUnique();
