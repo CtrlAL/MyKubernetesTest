@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: graph-service-depl
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: graph-service
+  template: 
+    metadata: 
+      labels:
+        app: graph-service
+    spec: 
+      containers: 
+        - name: graph-service
+          image: ctrlal/graph-service:latest
+---
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name: graph-service-clusterip-srv
+spec: 
+  type: ClusterIP
+  selector: 
+    app: graph-service
+  ports:
+    - name: graph-service
+      protocol: TCP
+      port: 80
+      targetPort: 8080

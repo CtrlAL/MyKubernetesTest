@@ -6,6 +6,7 @@ using TaskService.Data;
 using TaskService.Data.Interfaces;
 using TaskService.Infrastructure.DataServices.AsyncDataService;
 using TaskService.Infrastructure.DataServices.SyncDataService;
+using TaskService.Infrastructure.Middleware;
 using TaskService.Interceptors;
 using TaskService.Presentation.Extensions;
 using TaskService.SyncDataService;
@@ -15,6 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddHttpClient<INotificationDataClient, NotificationDataClient>();
@@ -66,6 +69,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseExceptionHandler();
 
 app.UseAuthorization();
 

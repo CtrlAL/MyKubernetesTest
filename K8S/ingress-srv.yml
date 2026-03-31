@@ -24,3 +24,10 @@ spec:
                 name: notification-service-clusterip-srv
                 port:
                   number: 8080
+          - path: /api/graph
+            pathType: Prefix
+            backend:
+              service:
+                name: graph-service-clusterip-srv
+                port:
+                  number: 80
